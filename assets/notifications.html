@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>알림</title>
+  <link rel="stylesheet" href="notifications.css">
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <a class="link" href="./mypage.html">←</a>
+      <div class="title">알림</div>
+      <div class="actions">
+        <button class="icon-btn" id="markAllReadBtn" aria-label="모두 읽음" title="모두 읽음">
+          <!-- check-double -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 9l10-6 10 6v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>
+            <path d="M22 9l-10 6L2 9"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="reloadBtn" aria-label="새로고침" title="새로고침">
+          <!-- refresh -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        </button>
+        <button class="icon-btn danger" id="deleteAllBtn" aria-label="모두 삭제" title="모두 삭제">
+          <!-- trash -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" aria-label="필터">
+      <button class="tab" data-filter="all"          aria-pressed="true">전체</button>
+      <button class="tab" data-filter="unread"       aria-pressed="false">미읽음</button>
+      <button class="tab" data-filter="notice"       aria-pressed="false">공지</button>
+      <button class="tab" data-filter="system"       aria-pressed="false">시스템</button>
+      <button class="tab" data-filter="participation"aria-pressed="false">일일참여</button>
+      <button class="tab" data-filter="moderation"   aria-pressed="false">운영</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="list" role="list"></div>
+    <div id="empty" class="empty" hidden>표시할 알림이 없습니다.</div>
+    <div id="loader" hidden>불러오는 중…</div>
+    <div id="sentinel" aria-hidden="true"></div>
+  </main>
+
+  <script type="module" src="./js/notifications.js"></script>
+  <script type="module">
+    import { setFontScale } from './js/common.js';
+    const saved = parseFloat(localStorage.getItem('ui.fontScale') || '1');
+    setFontScale(Number.isFinite(saved) ? saved : 1);
+  </script>
+</body>
+</html>

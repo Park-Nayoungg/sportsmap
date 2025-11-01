@@ -1,0 +1,25 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>신청 내역</title>
+<link rel="stylesheet" href="./styles.css">
+<script type="module" src="./js/common.js"></script>
+<script type="module" src="./js/my-applications.js"></script>
+</head><body>
+<header class="app-header">
+  <button type="button" class="back-plain" aria-label="이전으로" id="btnBack">‹</button>
+  <div class="logo">신청 내역</div>
+  <div class="actions">
+    <a class="icon-btn home" href="./main.html"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+        <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5z" fill="#10b981"></path>
+      </svg>
+    </a>
+  </div>
+</header>
+<main class="container">
+  <section class="panel">
+    <div class="panel-header"><h2 class="panel-title">내 신청</h2></div>
+    <div id="appList" class="list"></div>
+    <div id="appEmpty" class="meta" style="padding:12px" hidden>신청 내역이 없습니다.</div>
+  </section>
+</main>
+</body></html>

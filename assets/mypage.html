@@ -1,0 +1,201 @@
+<!-- mypage.html (마이페이지 화면) -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>스포츠맵 · 마이페이지</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./js/common.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-title">마이페이지</h1>
+
+    <div class="app-actions">
+      <!-- 알림 아이콘 -->
+      <button id="notifBtn" class="icon-btn" type="button" aria-label="알림">
+        🔔
+        <span id="notifBadge" class="badge" hidden>0</span>
+      </button>
+      <!-- 집 아이콘 홈 -->
+      <a class="icon-btn home" href="./main.html" aria-label="지도 홈">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5z" fill="#10b981"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+  <main class="container" aria-label="마이페이지">
+    <!-- 프로필 -->
+    <section class="panel" aria-labelledby="profile-title">
+      <div class="panel-header">
+        <h2 id="font-title" class="panel-title">프로필</h2>
+      </div>
+      <div class="list">
+        <div class="card" role="group" aria-label="기본 정보">
+          <div id="authSignedOut" role="group" aria-label="비로그인 영역">
+            <div class="stack" style="gap:8px">
+              <button id="loginBtn"  class="primary" type="button">로그인</button>
+              <button id="signupBtn" class="btn"     type="button">회원가입</button>
+            </div>
+          </div>
+
+          <div id="authSignedIn" role="group" aria-label="로그인 영역" hidden>
+            <h3 id="userNickname" class="meta"></h3>
+            <p class="meta">
+              <span id="userFullname" class="meta" style="display:block;margin-bottom:2px;"></span>
+              <strong id="userEmail">-</strong>
+            </p>
+            <div class="stack" style="margin-top:8px">
+              <label class="meta">닉네임
+                <input id="pf_nickname" placeholder="예: 러너길동">
+              </label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0 0;">
+                <button id="pf_save"   class="primary" type="button">프로필 저장</button>
+                <button id="logoutBtn" class="btn"     type="button">로그아웃</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 글자 크기 설정 -->
+    <section class="panel" aria-labelledby="font-title">
+      <div class="panel-header">
+        <h2 id="font-title" class="panel-title">글자 크기 설정</h2>
+      </div>
+      <div class="list">
+        <div class="card">
+          <label for="fontRange" class="meta">
+            크기: <span id="fontVal" aria-live="polite"></span>
+          </label>
+          <input id="fontRange" type="range" aria-label="글자 크기(포인트)">
+          <p class="meta" id="fontHelp" hidden></p>
+          <div class="" style="display:flex;padding:12px 0 0 0;gap:8px;align-items:center;flex-wrap:wrap">
+            <button id="fontMinus" class="btn" type="button" aria-label="글자 크기 축소">A-</button>
+            <button id="fontPlus" class="btn" type="button" aria-label="글자 크기 확대">A+</button>
+          </div>
+          <div style="display:flex;padding:12px 0 0 0;gap:8px;flex-wrap:wrap">
+            <button id="fontSave" class="primary" type="button">저장</button>
+            <button id="fontReset" class="btn" type="button">기본으로</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 즐겨찾기 / 신청 내역 -->
+    <section class="panel" aria-labelledby="saved-title">
+      <div class="panel-header">
+        <h2 id="saved-title" class="panel-title">내 즐겨찾기 · 신청 내역</h2>
+      </div>
+      <div class="list">
+        <div class="card" id="favMiniCard">
+          <h3>즐겨찾기</h3>
+          <div id="favMiniList" class="mini-list" aria-live="polite">
+            <p class="meta">즐겨찾기한 프로그램이 여기에 표시됩니다.</p>
+          </div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <h3 style="margin:0 0 4px">일일참여 글 관리</h3>
+            <p class="meta" style="margin:0">내가 올린 모집글과 신청자 관리</p>
+          </div>
+          <a class="chev-btn" href="./host-manage.html" data-auth="required" aria-label="모집글 관리">›</a>
+        </div>
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <h3 style="margin:0 0 4px">신청 내역</h3>
+            <p class="meta" style="margin:0">신청한 프로그램을 확인합니다.</p>
+          </div>
+          <a class="chev-btn" href="./my-applications.html" data-auth="required" aria-label="신청 내역 보기">›</a>
+        </div>
+        <!-- 관리자: 신고 내역 -->
+        <div class="card admin-only" style="display:none;align-items:center;justify-content:space-between">
+          <div>
+            <h3 style="margin:0 0 4px">신고 내역</h3>
+            <p class="meta" style="margin:0">커뮤니티 신고 접수 목록을 확인·조치합니다.</p>
+          </div>
+          <a class="chev-btn" href="./reports.html" data-auth="required" aria-label="신고 내역 보기">›</a>
+        </div>
+
+        
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 하단 네비게이션 -->
+  <nav class="bottom-nav" aria-label="하단 내비게이션">
+    <a href="./community.html">커뮤니티</a>
+    <a href="./main.html">지도</a>
+    <a href="./dailyprograms.html">일일참여</a>
+    <a class="active" href="./mypage.html" aria-current="page">마이페이지</a>
+  </nav>
+  <div class="spacer" aria-hidden="true"></div>
+
+  <dialog id="loginModal" class="auth-modal" aria-labelledby="login-title">
+    <form id="loginForm" method="dialog" class="auth-form">
+      <header class="auth-head">
+        <h3 id="login-title" class="auth-title">로그인</h3>
+        <button type="button" id="closeLogin" class="auth-close btn" aria-label="닫기">✕</button>
+      </header>
+      <p id="loginReason" class="auth-sub" hidden>로그인이 필요한 서비스입니다.</p>
+      <label class="meta">이메일
+        <input name="email" type="email" required autocomplete="email">
+      </label>
+      <label class="meta">비밀번호
+        <input name="password" type="password" required autocomplete="current-password">
+      </label>
+
+      <div class="auth-actions">
+        <button class="primary" type="submit">로그인</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="signupModal" class="auth-modal" aria-labelledby="signup-title">
+    <form id="signupForm" method="dialog" class="auth-form">
+      <header class="auth-head">
+        <h3 id="signup-title" class="auth-title">회원가입</h3>
+        <button type="button" id="closeSignup" class="auth-close btn" aria-label="닫기">✕</button>
+      </header>
+
+      <label class="meta">
+        <span class="meta-ttl">이메일<sup>*</sup></span>
+        <input name="email" type="email" required autocomplete="email">
+      </label>
+      <label class="meta">
+        <span class="meta-ttl">비밀번호<sup>*</sup></span>
+        <div class="pw-wrap">
+          <input id="password" name="password" type="password" required minlength="6" autocomplete="new-password">
+          <button type="button" class="pw-peek" aria-label="비밀번호 표시" aria-pressed="false">👁</button>
+        </div>
+      </label>
+      <label class="meta">
+        <span class="meta-ttl">비밀번호 확인<sup>*</sup></span>
+        <input id="passwordConfirm" name="passwordConfirm" type="password" required autocomplete="new-password">
+        <small id="pwHelp" class="pw-help" aria-live="polite"></small>
+      </label>
+      <label class="meta">
+        <span class="meta-ttl">이름<sup>*</sup></span>
+        <input name="fullname" type="text" required placeholder="예: 홍길동" />
+      </label>
+      <label class="meta">
+        <span class="meta-ttl">생년월일<sup>*</sup></span>
+        <input name="birthdate" type="date" />
+      </label>
+
+      <div class="auth-actions">
+        <button class="primary" type="submit">가입하기</button>
+      </div>
+    </form>
+  </dialog>
+
+
+  <!-- 동작 스크립트는 -->
+  <script type="module" src="./js/mypage.js"></script>
+</body>
+</html>

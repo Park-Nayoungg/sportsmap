@@ -1,0 +1,184 @@
+<!--dailyprograms.html-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>일일참여 모집</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./js/common.js"></script>
+  <script type="module" src="./js/daily.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-title">일일참여</h1>
+    <!-- 검색창만 -->
+    <form id="hdrSearch" class="searchbar" role="search" onsubmit="return false">
+      <input id="fQ" type="search" placeholder="주소/설명/연락처/주최자 검색" aria-label="검색" />
+      <!-- 검색 아이콘 -->
+      <button type="button" class="search-btn" aria-label="검색">🔍</button>
+      <button id="fFilter" type="button" class="btn"
+              aria-haspopup="true" aria-expanded="false" aria-controls="filterMenu">
+        필터 ⚙
+      </button>
+    </form>
+
+    <!-- 집 아이콘 홈 -->
+    <a class="icon-btn home" href="./main.html" aria-label="지도 홈">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+        <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5z" fill="#10b981"/>
+      </svg>
+    </a>
+  </header>
+  <div id="filterMenu" class="dropdown" role="dialog" aria-modal="false" hidden>
+    <form id="filterForm">
+      <div class="row">
+        <label for="fSport">종목</label>
+        <select id="fSport" name="fSport">
+          <option value="">전체</option>
+          <option value="running">러닝</option><option value="weight">웨이트</option><option value="futsal">풋살</option>
+          <option value="badminton">배드민턴</option><option value="basketball">농구</option>
+          <option value="tennis">테니스</option><option value="hiking">등산</option>
+          <option value="cycling">사이클</option><option value="golf">골프</option>
+          <option value="squash">스쿼시</option><option value="swimming">수영</option>
+          <option value="other">기타</option>
+        </select>
+      </div>
+      
+      <!-- 난이도 필터 추가 -->
+      <fieldset class="row">
+        <legend>난이도</legend>
+        <label><input type="radio" name="fDiff" value="" checked>전체</label>
+        <label><input type="radio" name="fDiff" value="easy">쉬움</label>
+        <label><input type="radio" name="fDiff" value="normal">보통</label>
+        <label><input type="radio" name="fDiff" value="hard">어려움</label>
+      </fieldset>
+      
+      <div class="row">
+        <label for="fMode">모집 방식</label>
+        <select id="fMode" name="fMode">
+          <option value="">전체</option>
+          <option value="fcfs">선착순</option>
+          <option value="selection">선발형</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label for="fFrom">시작일 ≥</label>
+        <input id="fFrom" name="fFrom" type="date"/>
+      </div>
+      <div class="row">
+        <label for="fTo">종료일 ≤</label>
+        <input id="fTo" name="fTo" type="date"/>
+      </div>
+
+      <div class="actions">
+        <button id="fApply" type="button" class="primary">적용</button>
+        <button id="fReset" type="button" class="btn">초기화</button>
+      </div>
+    </form>
+  </div>
+
+  <main id="viewMap" class="container">
+    <div id="map" class="map-area">
+      <iframe id="mapFrame" class="map-embed" src="./map.html" loading="lazy"></iframe>
+    </div>
+
+    <div class="content">
+      <!-- 제출 폼 -->
+      <section class="panel" aria-labelledby="sect-form">
+        <div class="panel-header">
+          <h2 id="sect-form" class="panel-title">하루 참여 모집 등록</h2>
+          <button id="openPost" class="btn-write-white btn-add" type="button">등록하기</button>
+        </div>
+      </section>
+      <dialog id="postModal" aria-labelledby="dailyModalTitle">
+        <form id="dailyForm" class="form">
+            <!-- 종목 -->
+            <div id="sportField"></div>
+            <!--난이도-->
+            <div class="row">
+              <label class="span-2" for="difficulty"><span>난이도<sup>*</sup></span></label>
+              <select id="difficulty" name="difficulty" required>
+                <option value="easy">쉬움 (★☆☆)</option>
+                <option value="normal">보통 (★★☆)</option>
+                <option value="hard">어려움 (★★★)</option>
+              </select>
+            </div>
+            <!-- 모집 인원 -->
+            <div class="row">
+              <label for="capacity"><span>모집 인원<sup>*</sup></span></label>
+              <select id="capacity" name="capacity" required>
+                <option value="">모집 인원</option>
+                <option value="1">1명</option>
+                <option value="2">2명</option>
+                <option value="3">3명</option>
+                <option value="4">4명</option>
+                <option value="5">5명</option>
+                <option value="6">6명</option>
+                <option value="8">8명</option>
+                <option value="10">10명</option>
+                <option value="12">12명</option>
+                <option value="15">15명</option>
+                <option value="20">20명</option>
+              </select>
+            </div>
+
+            <!-- 주소 -->
+            <div class="row">
+              <label class="span-2" for="address"><span>장소 주소<sup>*</sup></span></label>
+              <input id="address" name="address" autocomplete="off" required />
+            </div>
+
+            <!-- 일정 -->
+            <div class="row two-cols">
+              <label for="start"><span>일시(시작)<sup>*</sup></span></label>
+              <input id="start" name="start" type="datetime-local" required />
+              <label for="end"><span>일시(종료)<sup>*</sup></span></label>
+              <input id="end" name="end" type="datetime-local" required />
+            </div>
+
+            <!-- 설명 -->
+            <div class="row">
+              <label class="span-2" for="note">설명</label>
+              <textarea id="note" name="note" rows="2"></textarea>
+            </div>
+
+            <!-- 연락처/주최자 -->
+            <div class="row">
+              <label for="contact">연락처</label>
+              <input id="contact" name="contact" placeholder="오픈채팅/전화 등" />
+              <label for="host"><span>주최자<sup>*</sup></span></label>
+              <input id="host" name="host" placeholder="홍길동/○○크루" required/>
+            </div>
+
+            <div class="row">
+              <label class="span-2" for="recruitMode"><span>모집 방식<sup>*</sup></span></label>
+              <select id="recruitMode" name="recruit_mode" required>
+                <option value="fcfs">선착순</option>
+                <option value="selection" selected>선발형</option>
+              </select>
+            </div>
+            <button class="primary" type="submit">등록</button>
+        </form>
+      </dialog>
+
+      <!-- 리스트 -->
+      <section class="panel" aria-labelledby="sect-list">
+        <div class="panel-header">
+          <h2 class="panel-title" id="sect-list">다가오는 일일참여</h2>
+          <span class="badge" id="dailyCount">0건</span>
+        </div>
+        <div class="list" id="dailyList"></div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="하단 내비게이션">
+    <a href="./community.html">커뮤니티</a>
+    <a href="./main.html">지도</a>
+    <a class="active" href="./dailyprograms.html" aria-current="page">일일참여</a>
+    <a href="./mypage.html">마이페이지</a>
+  </nav>
+</body>
+</html>

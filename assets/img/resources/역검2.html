@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>고양이 술래잡기 – 클론(연습/모의)</title>
+<style>
+  :root{--bg:#fff; --panel:#fff; --ink:#000; --muted:#111;
+    --grid:#e5e7eb; --tile:#fff; --tile2:#fff;--accent:#2563eb; --warn:#f59e0b; --danger:#ef4444; --ok:#22c55e;
+    --red:#b91c1c; --blue:#1d4ed8;}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:linear-gradient(160deg,var(--bg),#060b18);color:var(--ink);font-family:system-ui,Segoe UI,Roboto,Pretendard,Apple SD Gothic Neo,sans-serif}
+  #grid:empty{ display:none }
+  #guide{
+    position:absolute; inset:16px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #152033;position:sticky;top:0;background:#0a0f1cBF;backdrop-filter:blur(6px);z-index:10}
+  header .left{display:flex;gap:10px;align-items:center}
+  header .task{display:inline-flex;gap:8px;align-items:center;font-weight:700}
+  header .task .icon{width:24px;height:24px;border-radius:6px;background:#0b1220;display:inline-flex;align-items:center;justify-content:center}
+  header .right{display:flex;gap:8px;align-items:center}
+  .chip{font-size:12px;color:#cbd5e1;border:1px solid #1f2b40;background:#0b1220;border-radius:999px;padding:4px 8px}
+  .timer{min-width:40px;text-align:right;font-variant-numeric:tabular-nums}
+  button{border:1px solid #1b273a;background:linear-gradient(180deg,#0ea5e9,#0284c7);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
+  button.ghost{background:#121a2a}
+  button:disabled{opacity:.6;cursor:not-allowed}
+
+  main{max-width:1120px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr;gap:16px;}
+  @media (min-width:1000px){main{ grid-template-columns:1fr 360px; }}
+
+  /* Left: stage */
+  .stage{grid-column: 1 / -1; border:1px solid #1b273a;background:linear-gradient(180deg,#0c1424,#0a0f1c);border-radius:16px;min-height:480px;position:relative;overflow:hidden}
+  .stage header.hdr{display:flex;gap:10px;align-items:center;/*justify-content:space-between;*/padding:12px 14px;border-bottom:1px solid #182235}
+  .progress{height:6px;background:#eef2f7}
+  .progress>div{height:100%;width:0;background:linear-gradient(90deg,#22d3ee,#a78bfa)}
+
+  .title { padding: 6px 10px 0; text-align: center; }
+  .title h2 { margin: 0 0 var(--vspace); line-height: 1.2; }
+  .title p{ margin:4px 0 0; color:var(--muted); font-size:20px }
+  .board{padding:16px;display:flex;align-items:center;justify-content:center;min-height:430px;background:#fff; position:relative; }
+  .grid{display:grid;gap:8px;width:100%;max-width:420px}
+  .cell{aspect-ratio:1/1;background:linear-gradient(180deg,var(--tile),var(--tile2));border:1px solid var(--grid);border-radius:12px;position:relative}
+  .cell .mouse,.cell .cat{position:absolute;inset:8%;display:flex;align-items:center;justify-content:center;border-radius:10px}
+  .cell .mouse{background:#064e3b}
+  .cell .cat{background:#0b2a52}
+  .cell .cat.red{background:var(--red)}
+  .cell .cat.blue{background:var(--blue)}
+  .emoji{font-size:28px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+  h1,h2,h3,h4,h5,h6,p { margin: 0; }
+  /* Right: control/info */
+  .side{position: static;top: auto; right: auto; bottom: auto; left: auto;grid-column: 1 / -1;display: flex; flex-wrap: wrap; align-items: center; gap: 10px;padding: 12px 16px; margin: 16px auto 24px;width: 100%; max-width: 1120px;background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;overflow-x: auto;z-index: auto;}
+  .side .row{ min-width: 560px; }
+  .row{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+  label{font-size:13px;color:var(--muted)}
+  input,select{background:#0b1220;color:#e5e7eb;border:1px solid #1f2b40;border-radius:10px;padding:8px 10px;width:140px}
+
+  .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+  .stat{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px;text-align:center}
+  .stat .k{font-size:12px;color:#111827}
+  .stat .v{font-size:18px;font-weight:800}
+
+  /* Q sheet */
+  .qs{position:absolute; inset:16px;display:flex; align-items:center; justify-content:center;}
+  .qs .sheet{width:100%; max-width:720px; margin:0 auto;display:grid; grid-template-columns:1fr 16px 1fr; gap:12px;}
+  .qs .col h3{margin:0 0 8px 0;font-size:16px;color:#111;display:flex;align-items:center;gap:6px}
+  .qs .col.left h3 svg{transform:rotate(0deg)}
+  .qs .opts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .qs .opt{display:flex;flex-direction:column;gap:6px;align-items:center;background:#0b1220;border:1px solid #1f2b40;border-radius:10px;padding:10px;cursor:pointer}
+  .qs .opt[data-sel="1"]{outline:2px solid var(--accent)}
+  .qs .opt:hover{ background:#f8fafc; border-color:#e5e7eb }
+  .qs .opt:active{ background:#C9F2F0; border-color:#94d8d6 }
+  .qs .center{display:flex;align-items:center;justify-content:center;color:#64748b}
+  .qs .unknown{border:1px solid #e5e7eb; background:#fff; border-radius:10px;padding:10px 14px; font-size:14px; cursor:pointer;}
+  .qs .unknown:hover{background:#f8fafc}
+  .hint{padding:8px 14px;color:#cbd5e1;font-size:13px}
+  .qpreview{display:flex;justify-content:center; align-items:center;gap:10px;margin:8px 14px 0 14px}
+  .qp-cell{width:72px;height:72px;border:1px solid var(--grid);border-radius:8px;position:relative;background:#fff}
+  .title .qpreview { margin: var(--vspace) 0; }
+  .qpreview .cat{position:absolute;inset:10%;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#e5e7eb}
+  .qpreview .cat.red{background:var(--red)}
+  .qpreview .cat.blue{background:var(--blue)}
+  .qpreview .emoji{font-size:40px;filter:none}
+  .qp-label{font-size:13px;color:#111}
+  /* modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center}
+  .modal.show{display:flex}
+  .modal .mask{position:absolute;inset:0;background:#000a}
+  .modal .box{position:relative;z-index:1;background:#0b1220;border:1px solid #1f2b40;border-radius:14px;padding:20px;min-width:320px;text-align:center}
+
+  /* screens */
+  .centerWrap{min-height:200px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px}
+  .card{border:1px solid #1f2b40;background:#0b1220;border-radius:16px;padding:20px;max-width:720px;width:100%}
+  .card h2{margin:0 0 6px 0}
+  .desc{color:#94a3b8;font-size:14px}
+
+  .tooltip{display:inline-block;border:1px solid #e2e8f0;color:#cbd5e1;background:#fff;border-radius:8px;padding:4px 8px;font-size:12px}
+
+    /* 본문: 흰 배경, 검정 글자, 선택 금지, 프리텐다드, line-height=1 */
+    html,body{height:100%}
+    body{
+    margin:0; background:#e2e2e2 !important; color:#000 !important;
+    user-select:none; line-height:1;
+    font-family:"Pretendard", sans-serif;
+    /* 원본처럼 pre-wrap 상속 주려면 상위 래퍼에만 걸어줍니다 */
+    white-space:normal;
+    }
+    #app, .stage, .side, .card{ white-space:pre-wrap; }
+
+    /* 헤더를 흰색 고정, 하단 1px 라인 */
+    header, .stage header.hdr{
+    background:#fff !important;
+    border-bottom:1px solid #e5e7eb !important;
+    backdrop-filter:none !important;
+    }
+
+    /* 패널 배경/테두리 라이트화 */
+    .stage, .side, .card{
+    background:#fff !important;
+    border:1px solid #e5e7eb !important;
+    box-shadow:none;
+    }
+
+    /* 보드와 그리드: 라이트 톤 + 간격 축소 가능 지점 */
+
+    /* 셀: 평면 흰색, 옅은 그리드 라인 */
+    .cell{
+      background: linear-gradient(180deg,#fff 0%,#f9fbff 100%);
+      border: 2px solid var(--grid) !important;
+      border-radius: 12px;
+      box-shadow: 0 1px 0 rgba(17,24,39,.04), 0 6px 16px rgba(17,24,39,.10);
+      outline: 0;
+      transition: border-color .15s ease, box-shadow .15s ease, transform .08s ease;
+    }
+
+    /* 내부 아이콘 박스 크기와 색조(원본은 단색 배경 느낌) */
+    .cell .mouse, .cell .cat{ inset:10%; border-radius:8px; }
+    .cell .mouse{ background:#dfdfdf !important; }  /* 중립 회색 */
+    .cell .cat{ background:#e5e7eb !important; }
+    .cell .cat.red{ background:var(--red) !important; }
+    .cell .cat.blue{ background:var(--blue) !important; }
+
+    /* 이모지/아이콘 효과 제거 */
+    .emoji{ font-size:28px; filter:none; }
+
+    /* 모달도 라이트 */
+    .modal .box{
+    background:#fff !important;
+    border:1px solid #e5e7eb !important;
+    color:#000;
+    }
+    .modal .mask{ background:#0006; }
+    button{ background:#fff !important; border:1px solid #e5e7eb !important; color:#111 !important;
+            border-radius:8px !important; padding:10px 14px !important; font-weight:700 }
+    button:hover{ background:#f8fafc !important }
+    button.ghost{ background:#fff !important; border-color:#e5e7eb !important; color:#111 !important }
+    .stage{ position:relative }
+
+    .qs{
+    position:absolute; inset:16px;
+    display:none;
+    background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+    overflow:auto;
+    }
+    .qs.show{ display:block }
+
+    .row{ margin:0 }
+    label{ font-size:13px; color:#111 }
+    input,select{
+    background:#fff; color:#111; border:1px solid #e5e7eb; border-radius:8px; padding:8px 10px; width:auto
+    }
+    .qs h3{ margin:0 0 8px; font-size:14px; color:#111 }
+    .qs .opt{ border:1px solid #e5e7eb; background:#fff }
+    .stage header.hdr{ padding-bottom:6px; }
+    .progress{ margin:0; }
+    .title{ padding:2px 10px 0; }            /* 필요하면 0~2px로 더 줄이기 */
+    /* 1) stage를 고정 높이+플렉스로. max-height 금지 */
+    :root{ --minStage:800px; }
+    .stage{
+      height:100%;
+      min-height:var(--minStage);
+      max-height:none !important;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;        /* 페이지 스크롤 방지 */
+    }
+
+    /* 2) 마진 겹침 방지: 부모에 1px 패딩 주고 상쇄 */
+    .stage{ padding-top:1px; padding-bottom:1px; }
+    .title{ margin-top:0; }   /* 첫 자식 마진 무력화 */
+
+    /* 3) 남는 공간은 보드가 채우고 내부만 스크롤 */
+    .board{
+      flex:1 1 auto;
+      min-height:320px;
+      overflow:auto;
+      padding:8px;            /* 필요 최소 패딩 */
+    }
+
+    /* 4) 진행바↔제목, 제목↔부제 간격 압축 */
+    .stage header.hdr{ padding-bottom:6px; }
+    .title{ padding:2px 10px 0; }
+    .title h2{ margin:0 0 2px; line-height:1.06; }
+    .title p{ margin:2px 0 0; line-height:1.22; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="left">
+      <div class="task"><span class="icon">🐭</span> <span>고양이 술래잡기</span></div>
+      <span class="chip" id="roundChip">연습</span>
+    </div>
+    <div class="right">
+      <span class="timer" id="timer">0</span>
+      <button id="btnSkip" class="ghost">설명 건너뛰기</button>
+      <button id="btnStart">시작</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="stage" id="stage">
+      <header class="hdr">
+        <div><span id="qIdx">0</span> / <span id="qTotal">5</span></div>
+        <div class="tooltip">문항 수, 남은 시간은 헤더에 표시됩니다.</div>
+      </header>
+
+      <div class="progress"><div id="progressBar"></div></div>
+
+      <div class="title">
+        <h2 id="title">방법 설명</h2>
+        <div id="qPreview" class="qpreview" hidden></div>
+        <p id="subtitle">생쥐 무리 위치를 기억한 뒤 빨간 칸, 파란 칸의 고양이가 생쥐를 찾았는지 판단해 주세요.</p>
+      </div>
+
+      <div class="board" id="board">
+        <!-- 그리드 영역 -->
+        <div class="grid" id="grid"></div>
+
+        <!-- 초기 가이드 카드 -->
+        <div class="centerWrap" id="guide">
+          <div class="card">
+            <h2>방법 설명</h2>
+            <ol class="desc" style="text-align:left">
+              <li>생쥐 무리가 등장합니다. 위치를 기억합니다.</li>
+              <li>잠시 후 고양이 두 마리가 등장합니다. 빨간 칸과 파란 칸입니다.</li>
+              <li>각 고양이가 생쥐를 찾았는지 판단하고 확신 정도를 선택합니다.</li>
+            </ol>
+            <p class="desc">연습에서는 5문항이 제공됩니다.</p>
+          </div>
+        </div>
+
+        <!-- 질문 시트: 보드 위 오버레이 -->
+        <div class="qs" id="qs">
+          <div class="sheet">
+            <div class="col left">
+              <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" transform="rotate(180 12 12)"><path fill="currentColor" d="M18.8748 12.7754H5.9248v-1.1h12.95v1.1Z"/><path fill="currentColor" d="M5.70873 13.0361c-.52764-.445-.45434-1.2181-.02268-1.6497l6.07058 5.9429-.7627.7926L5.70873 13.0361Z"/></svg>
+                놓쳤다
+              </h3>
+              <div class="opts" id="optsL"></div>
+            </div>
+
+            <div class="center">I</div>
+
+            <div class="col right">
+              <h3>
+                찾았다
+                <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M5.125 11.2246h12.95v1.1H5.125v-1.1Z"/><path fill="currentColor" d="M18.2913 10.9639c.5277.445.4544 1.2181.0227 1.6497l-5.2783 5.0166-.7618-.7926 5.2932-5.1436.7242-.7301Z"/></svg>
+              </h3>
+              <div class="opts" id="optsR"></div>
+            </div>
+          </div>
+          <div class="hint">척도: 왼쪽은 “놓쳤다” 확신, 오른쪽은 “찾았다” 확신입니다. 각 쪽 4단계로 총 8수준입니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 하단 설정 패널 -->
+    <aside class="side">
+      <div class="row">
+        <label>열 × 행</label>
+        <div style="display:flex;gap:6px">
+          <input id="cols" type="number" min="3" max="10" value="6">
+          <input id="rows" type="number" min="3" max="10" value="6">
+        </div>
+      </div>
+      <div class="row"><label>생쥐 미리보기(ms)</label><input id="tRats" type="number" min="300" step="100" value="1000"></div>
+      <div class="row"><label>고양이 노출(ms)</label><input id="tCats" type="number" min="300" step="100" value="1500"></div>
+      <div class="row"><label>문항 수</label><input id="qCount" type="number" min="1" max="20" value="5"></div>
+      <div class="row"><label>문항 제한초</label><input id="qTime" type="number" min="1" max="30" value="3"></div>
+
+      <div class="meta">
+        <div class="stat"><div class="k">남은 문항</div><div class="v" id="remainV">-</div></div>
+        <div class="stat"><div class="k">진행 단계</div><div class="v" id="phaseV">대기</div></div>
+        <div class="stat"><div class="k">스코어</div><div class="v" id="scoreV">0</div></div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button id="btnReset" class="ghost">초기화</button>
+        <button id="btnAuto" class="ghost">자동 테스트</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- 제한시간 초과 모달 -->
+  <div class="modal" id="timeOver">
+    <div class="mask"></div>
+    <div class="box">
+      <div style="font-size:42px">⏱️</div>
+      <h3 style="margin:6px 0 2px 0">제한 시간이 지났습니다.</h3>
+      <p style="color:#cbd5e1">더 빠르게 응답해 주세요.</p>
+      <button id="btnCloseTO" class="ghost" style="margin-top:8px">닫기</button>
+    </div>
+  </div>
+
+<script>
+(function(){
+  // ===== utilities =====
+  const $ = (s,root=document)=>root.querySelector(s);
+  const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+  const randInt = n=>Math.floor(Math.random()*n);
+  function pickK(total,k){
+    const idx=Array.from({length:total},(_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]}
+    return new Set(idx.slice(0,k));
+  }
+
+  // ===== state =====
+  const stageEl = $('#stage');
+  const boardEl = $('#board');
+  const titleEl = $('#title');
+  const subtitleEl = $('#subtitle');
+  const qSheet = $('#qs');
+  const optsL = $('#optsL');
+  const optsR = $('#optsR');
+  const timerEl = $('#timer');
+  const pbar = $('#progressBar');
+  const qIdxEl = $('#qIdx');
+  const qTotalEl = $('#qTotal');
+  const remainV = $('#remainV');
+  const phaseV = $('#phaseV');
+  const scoreV = $('#scoreV');
+  const timeOver = $('#timeOver');
+  const btnStart = $('#btnStart');
+  const btnSkip = $('#btnSkip');
+  const btnReset = $('#btnReset');
+  const btnAuto = $('#btnAuto');
+  const btnCloseTO = $('#btnCloseTO');
+  const cfg = {
+    cols: +$('#cols').value || 6,
+    rows: +$('#rows').value || 6,
+    tRats: +$('#tRats').value || 1300,
+    tCats: +$('#tCats').value || 1100,
+    qCount: +$('#qCount').value || 5,
+    qTime: +$('#qTime').value || 6,
+  };
+
+  let S = null; // runtime
+  function randBetween(a,b){ return a + Math.random()*(b-a); }
+  // ===== UI builders =====
+  function initGrid(cols, rows){
+    const total = cols*rows;
+    let grid = document.querySelector('#grid');
+    if(!grid){
+        grid = document.createElement('div');
+        grid.className = 'grid';
+        grid.id = 'grid';
+        boardEl.prepend(grid);     // board 안에 유지
+    }
+    grid.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+    grid.innerHTML = '';
+    for(let i=0;i<total;i++){
+        const c = document.createElement('div');
+        c.className = 'cell'; c.dataset.idx = i;
+        grid.appendChild(c);
+    }
+    return grid;
+  }
+  function showRats(grid, set){
+    set.forEach(idx=>{
+      const cell=grid.children[idx];
+      const m=document.createElement('div'); m.className='mouse blink'; m.innerHTML='<div class="emoji">🐭</div>';
+      cell.appendChild(m);
+    });
+  }
+  function clearRats(grid){ $$('.mouse',grid).forEach(x=>x.remove()); }
+
+  function placeCats(grid, redIdx, blueIdx){
+    const r=document.createElement('div'); r.className='cat red'; r.innerHTML='<div class="emoji">🐱</div>';
+    const b=document.createElement('div'); b.className='cat blue'; b.innerHTML='<div class="emoji">🐱</div>';
+    grid.children[redIdx].appendChild(r);
+    grid.children[blueIdx].appendChild(b);
+  }
+  function clearCats(grid){ $$('.cat',grid).forEach(x=>x.remove()); }
+
+  function buildSheet(){
+    const labelsL = ['매우\n확실하다','확실하다','확실한 것 같다','불확실하다'];
+    const labelsR = ['불확실하다','확실한 것 같다','확실하다','매우\n확실하다']; // 오른쪽 끝이 매우 확실
+
+    const legendsL = ['1','2','3','4'];
+    const legendsR = ['5','6','7','8'];
+
+    optsL.innerHTML=''; optsR.innerHTML='';
+    labelsL.forEach((t,i)=>{
+      const b=document.createElement('button');
+      b.type='button'; b.className='opt';
+      b.innerHTML=`<div data-col="${i}"></div><div>${t}</div>`;
+      b.onclick=()=>selectOpt('L',i);
+      b.title = `놓쳤다 ${legendsL[i]}`; b.dataset.idx=i; optsL.appendChild(b);
+    });
+    labelsR.forEach((t,i)=>{
+      const b=document.createElement('button');
+      b.type='button'; b.className='opt';
+      b.innerHTML=`<div data-col="${i}"></div><div>${t}</div>`;
+      b.onclick=()=>selectOpt('R',i);
+      b.title = `찾았다 ${legendsR[i]}`; b.dataset.idx=i; optsR.appendChild(b);
+    });
+
+    // 가운데 "잘 모르겠다"
+    const unk = document.getElementById('unknownBtn');
+    if(unk){
+      unk.onclick=()=>{
+        if(!S || S.phase!=='ASK') return;
+        S.selL=0; S.selR=0; S.choiceNeutral=true;
+        finishAsk(S.askTarget,true); // neutral=true
+      };
+    }
+  }
+
+  function selectOpt(side,i){
+    if(!S || S.phase!=='ASK') return;
+    if(side==='L'){ $$('.opt',optsL).forEach(x=>x.dataset.sel='0'); optsL.children[i].dataset.sel='1'; S.selL=i+1; }
+    else { $$('.opt',optsR).forEach(x=>x.dataset.sel='0'); optsR.children[i].dataset.sel='1'; S.selR=i+5; }
+    // auto advance if both picked for red/blue steps
+    if(S.askTarget==='red' && (S.selL||S.selR)) finishAsk('red');
+    if(S.askTarget==='blue' && (S.selL||S.selR)) finishAsk('blue');
+  }
+  function enterQuestionUI(){
+    const grid = document.querySelector('#grid');
+    const qs   = document.querySelector('#qs');
+    if(!grid || !qs) return;
+    grid.style.display = 'none';
+    qs.classList.add('show'); document.querySelector('#guide')?.remove();
+  }
+  function exitQuestionUI(){
+    const grid = document.querySelector('#grid');
+    const qs   = document.querySelector('#qs');
+    if(!grid || !qs) return;
+    grid.style.display = '';
+    qs.classList.remove('show');
+  }
+  // ===== flow =====
+  function startPractice(){
+    document.querySelector('#guide')?.remove();
+    boardEl.querySelector('.centerWrap')?.remove();
+    //$('#guide')?.remove();
+    Object.assign(cfg,{
+      cols: clamp(+$('#cols').value||6,3,10),
+      rows: clamp(+$('#rows').value||6,3,10),
+      tRats: clamp(+$('#tRats').value||1000,300,10000),
+      tCats: clamp(+$('#tCats').value||1500,300,10000),
+      qCount: clamp(+$('#qCount').value||5,1,20),
+      qTime: clamp(+$('#qTime').value||6,3,30),
+    });
+
+    qTotalEl.textContent = cfg.qCount;
+    $('#roundChip').textContent='연습';
+    btnStart.disabled=true; btnSkip.disabled=true;
+    S={idx:0, score:0, grid:null, hidden:null, cats:null, timer:null, tleft:0, phase:'INIT', selL:0, selR:0, askTarget:null, log:[]};
+    nextQuestion();
+  }
+
+  function nextQuestion(){
+    if (S.idx >= cfg.qCount) { endPractice(); return; }
+    S.selL = 0; S.selR = 0;
+    hideQPreview();
+    // 질문 시트 숨김
+    if (qSheet) { qSheet.classList.remove('show'); }
+
+    qIdxEl.textContent = String(S.idx + 1);
+    remainV.textContent = String(cfg.qCount - S.idx - 1);
+
+    titleEl.textContent = '생쥐들이 숨습니다';
+    subtitleEl.textContent = '잠깐 보여드릴 테니 위치를 기억해 주세요.';
+    phaseV.textContent = '쥐 미리보기';
+
+    const total = cfg.cols * cfg.rows;
+    const grid  = initGrid(cfg.cols, cfg.rows);
+    S.grid = grid;
+
+    // 문항별 생쥐 수 결정: 최소 4, 2~3배 증가, 상한 30 또는 칸 수
+    const RATS_MIN = 4, RATS_CAP = 20;
+    const maxRats = Math.min(RATS_CAP, total);
+    let ratsThis;
+
+    if (S.idx === 0) {
+        ratsThis = Math.min(maxRats, RATS_MIN + randInt(3)); // 4~6 시작
+    } else {
+        const prev = S.ratsPrev || RATS_MIN;
+        const growth = 1.9 + Math.random() * (2.8 - 1.9);     // 1.9~2.8배
+        ratsThis = Math.floor(prev * growth);
+        ratsThis = clamp(ratsThis, RATS_MIN, maxRats);
+    }
+    S.ratsPrev = ratsThis;
+
+    const hidden = pickK(total, ratsThis);
+    S.hidden = hidden;
+    showRats(grid, hidden);
+
+    timerStart(cfg.tRats, () => {
+        clearRats(grid);
+        showCats();
+    }, true);
+  }
+
+  function showCats(){
+    titleEl.textContent = '고양이들이 찾습니다';
+    subtitleEl.textContent = '빨간 칸과 파란 칸의 위치를 기억해 주세요.';
+    phaseV.textContent = '고양이 노출';
+
+    const total = cfg.cols * cfg.rows;
+    const r = randInt(total);
+    let b = randInt(total);
+    if (b === r) b = (b + 1) % total;
+
+    S.cats = {
+        red: r,
+        blue: b,
+        redCaught:  S.hidden.has(r),
+        blueCaught: S.hidden.has(b)
+    };
+    placeCats(S.grid, r, b);
+
+    timerStart(cfg.tCats, () => {
+        clearCats(S.grid);
+        ask('red');
+    }, true);
+  }
+  function showQPreview(target){
+    const box = document.getElementById('qPreview'); if(!box) return;
+    const color = target==='red' ? 'red' : 'blue';
+    box.hidden = false;
+    box.innerHTML =
+      `<div class="qp-cell"><div class="cat ${color}"><div class="emoji">🐱</div></div></div>
+      `;
+  }
+  function hideQPreview(){
+    const box = document.getElementById('qPreview'); if(!box) return;
+    box.hidden = true; box.innerHTML='';
+  }
+
+  function ask(target){
+    const qsEl = document.querySelector('#qs');
+    S.phase='ASK'; S.askTarget=target; buildSheet();
+    if(qsEl) qsEl.classList.add('show');
+    enterQuestionUI();
+
+    titleEl.textContent = (target==='red'
+      ? '빨간 칸의 고양이는 생쥐를 찾았을까요?'
+      : '파란 칸의 고양이는 생쥐를 찾았을까요?');
+
+    showQPreview(target); // ← 추가
+
+    subtitleEl.textContent='정답이라 생각하는 방향으로 확신하는 만큼 표시해 주세요.';
+    phaseV.textContent = (target==='red'?'질문(빨강)':'질문(파랑)');
+
+    $$('.opt',optsL).forEach(x=>x.dataset.sel='0');
+    $$('.opt',optsR).forEach(x=>x.dataset.sel='0');
+    S.selL=0; S.selR=0;
+
+    timerStart(cfg.qTime*1000, ()=>{ timeOverShow(); }, false);
+  }
+
+  function finishAsk(target, neutral=false){
+    timerStop();
+
+    let choice, predFound, truth, correct=false;
+    if(neutral){
+      choice = 0; predFound = null;
+      truth = target==='red'? S.cats.redCaught : S.cats.blueCaught;
+      correct = false;
+    }else{
+      choice = (S.selR?S.selR:S.selL);    // 1..8
+      predFound = choice>=5;              // 5..8 -> 찾았다
+      truth = target==='red'? S.cats.redCaught : S.cats.blueCaught;
+      correct = (predFound===truth);
+      if(correct){ S.score += 1; scoreV.textContent = String(S.score); }
+    }
+
+    S.log.push({idx:S.idx+1, target, choice, predFound, truth, correct});
+
+    if(target==='red') ask('blue');
+    else {hideQPreview(); exitQuestionUI(); S.idx += 1; nextQuestion(); }
+  }
+
+  function endPractice(){
+    timerStop();
+    exitQuestionUI();
+    phaseV.textContent='완료';
+    titleEl.textContent='연습 완료'; subtitleEl.textContent='연습 창을 종료해도 좋습니다.\n 다시 시작하시려면 오른쪽 위의 [시작] 버튼을 눌러주세요';
+
+    const ok = S.log.filter(x=>x.correct).length; const total = S.log.length;
+    const card = document.createElement('div'); card.className='centerWrap';
+    card.innerHTML = `<div class="card"><div style="font-size:56px">🎯</div><h2>수고하셨습니다! 연습을 모두 완료했어요.</h2><p class="desc">실전 맛보기 스코어 <strong>(${ok}/${total})</strong></p></div>`;
+
+    // 보드 초기화: 그리드만 제거, 질문시트(#qs)는 보존
+    boardEl.querySelector('.grid')?.remove();
+    boardEl.querySelector('.centerWrap')?.remove();
+    boardEl.appendChild(card);
+
+    btnStart.disabled=false; btnSkip.disabled=false;
+  }
+
+  // ===== timer =====
+  let tHandle=null, tEnd=0, tDur=0;
+  function timerStart(ms, onEnd, showMs){
+    timerStop();
+    tDur=ms; tEnd=Date.now()+ms; pbar.style.width='100%';
+    const tick=()=>{
+      const left = Math.max(0, tEnd-Date.now());
+      if(showMs) timerEl.textContent = Math.ceil(left/100)/10; // 0.1s
+      else timerEl.textContent = Math.ceil(left/1000);
+      pbar.style.width = `${Math.max(0, left/ms)*100}%`;
+      if(left<=0){ timerStop(); onEnd&&onEnd(); }
+    };
+    tHandle=setInterval(tick, 100); tick();
+  }
+  function timerStop(){ if(tHandle){ clearInterval(tHandle); tHandle=null; } }
+
+  function timeOverShow(){
+    timeOver.classList.add('show');
+
+    const proceed = () => {
+      timeOver.classList.remove('show');
+
+      if (S && S.phase === 'ASK') {
+        const truth = S.askTarget === 'red' ? S.cats.redCaught : S.cats.blueCaught;
+        S.log.push({
+          idx: S.idx + 1,
+          target: S.askTarget,
+          choice: 0,
+          truth,
+          correct: false,
+          timeout: true
+        });
+
+        if (S.askTarget === 'red') {
+          ask('blue');
+        } else {
+          exitQuestionUI();
+          S.idx += 1;
+          nextQuestion();
+        }
+      }
+    };
+
+    // 닫기 버튼과 마스크 클릭으로 진행
+    $('#btnCloseTO').onclick = proceed;
+    $('.modal .mask').onclick = proceed;
+
+    // 자동 닫힘(선택) — 필요 없으면 이 줄 삭제
+    setTimeout(proceed, 1200);
+  }
+
+  // ===== wiring =====
+  btnSkip.onclick=()=>{
+    // jump to next screen of explanation (mock). Here we just keep the same.
+  };
+  btnStart.onclick=()=>startPractice();
+  btnReset.onclick=()=>{ location.reload(); };
+
+  btnAuto.onclick=async()=>{
+    // smoke test: 2 questions, short timings
+    $('#qCount').value=2; $('#tRats').value=300; $('#tCats').value=300; $('#qTime').value=3; startPractice();
+  };
+
+  btnCloseTO.onclick=()=>{ timeOver.classList.remove('show'); };
+
+  // init counters
+  qTotalEl.textContent = $('#qCount').value;
+  remainV.textContent = '-'; scoreV.textContent='0'; timerEl.textContent='0';
+})();
+</script>
+</body>
+</html>

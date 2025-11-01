@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>스포츠맵</title>
+
+  <!-- QR 토큰 가드 + main.html로 전달 -->
+  <script>
+    (function () {
+      var qs = new URLSearchParams(location.search);
+      var ok = qs.get('key') === 'onlyQR';
+      if (!ok) {
+        document.addEventListener('DOMContentLoaded', function () {
+          document.documentElement.innerHTML = '<body style="font:14px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;">접근할 수 없습니다.</body>';
+        });
+        return;
+      }
+      // key가 유효하면 main.html로 이동. 기존 쿼리스트링 그대로 유지
+      var target = 'main.html' + (location.search || '');
+      // 루프 방지: 이미 main.html이면 이동하지 않음
+      if (!/\/?main\.html$/i.test(location.pathname)) {
+        location.replace(target);
+      }
+    })();
+  </script>
+
+  <!-- 사이트 공용 CSS가 루트에 있다면 사용. 위치가 다르면 경로를 맞추십시오. -->
+  <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+<body>
+  <noscript>이 사이트는 자바스크립트가 필요합니다.</noscript>
+</body>
+</html>

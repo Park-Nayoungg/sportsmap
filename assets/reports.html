@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>신고 내역</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./community.css" />
+  <style>
+    /* 탭 기본 스타일(필요 시 조정) */
+    .tabs{display:flex;justify-content:flex-start;gap:8px;margin-top:12px}
+    .tab{border:1px solid #e5e7eb;padding:6px 10px;border-radius:8px;background:#fff;cursor:pointer}
+    .tab.is-active{background:#111;color:#fff;border-color:#111}
+    .back-plain{border:0;background:transparent;font-size:20px;line-height:1;cursor:pointer}
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <a class="chev-btn" href="./mypage.html" aria-label="이전으로">‹</a>
+    <h1 class="app-title" style="margin:0 auto;text-align:center;">신고 내역</h1>
+    <span style="width:36px"></span><!-- 우측 균형용 스페이서 -->
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <nav class="tabs" role="tablist">
+        <button class="tab is-active" data-tab="community" role="tab" aria-selected="true">
+          커뮤니티(<span id="cntCommunity">0</span>)
+        </button>
+        <button class="tab" data-tab="daily" role="tab" aria-selected="false">
+          일일참여(<span id="cntDaily">0</span>)
+        </button>
+      </nav>
+      <div id="reportList" class="list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/reports.js"></script>
+  <script>
+    // 뒤로가기 동작
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('btnBack')?.addEventListener('click', ()=> history.back());
+    });
+  </script>
+</body>
+</html>

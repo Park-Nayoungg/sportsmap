@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>스포츠 프로그램 지도 플랫폼 UI</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./js/common.js"></script>
+  <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-title">스포츠맵</h1>
+    <div class="search"><input type="search" placeholder="프로그램/시설 검색" aria-label="프로그램 또는 시설 검색" /></div>
+    <div class="actions">
+      <button class="btn" id="btnFilter" type="button">필터 ⚙</button>
+    </div>
+  </header>
+  <!-- 본문: 지도 + 리스트 -->
+  <main id="viewMap" class="container" aria-label="지도와 프로그램 목록">
+    <!-- 지도 영역 -->
+    <div id="map" class="map-area" role="region" aria-label="지도 영역">
+      <iframe id="mapFrame" class="map-embed" src="./map.html" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <!-- 리스트 영역 -->
+    <div class="content">
+      <!-- 오늘/신청 가능 프로그램 -->
+      <section class="panel" aria-labelledby="sect-programs-title">
+        <div class="panel-header">
+          <h2 class="panel-title" id="sect-programs-title">스포츠시설</h2>
+          <!--<span class="badge" aria-label="전 연령과 노인 대상 포함">공원 · 요가원 · 골프장</span>-->
+        </div>
+        <div class="list" id="programList">
+          <!--스포츠시설-->
+          <article class="card" data-id="sports-강북문화예술-스포츠시설" data-type="sports" data-address="서울 강북구 삼각산로 85" data-title="스포츠시설">
+            <h3>강북문화예술회관</h3>
+            <p class="meta">수영, 척추운동, 기구필라테스, 단전호흡, 요가, 헬스<br>
+            월-토 06:00-21:50<br>
+            02-944-3060</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북문화예술회관">위치</button>
+            <a class="review" data-act="review" href="#" aria-label="강북문화예술회관">리뷰보기</a>
+            <a class="application" href="https://www.gbcmc.or.kr/fmcs/66" target="_blank" rel="noopener" aria-label="강북문화예술회관">프로그램 신청 및 보기</a>
+          </article>
+          <article class="card" data-id="sports-강북웰빙스포츠센터-스포츠시설" data-type="sports" data-address="서울 강북구 오현로31길 51" data-title="스포츠시설">
+            <h3>강북웰빙스포츠센터</h3>
+            <p class="meta">수영, 헬스, 기구필라테스, 스쿼시, 에어로빅, 댄스, 척추운동<br>
+            월-토 06:00-19:50<br>
+            02-944-2900</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북웰빙스포츠센터">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북웰빙스포츠센터">리뷰보기</a>
+            <a class="application" href="https://www.gbcmc.or.kr/fmcs/72" target="_blank" rel="noopener" aria-label="강북웰빙스포츠센터">프로그램 신청 및 보기</a>
+          </article>
+          <article class="card" data-id="sports-강북오동배드민턴장-스포츠시설" data-type="sports" data-address="서울 강북구 덕릉로42길 49 (번동)" data-title="스포츠시설">
+            <h3>강북오동배드민턴장</h3>
+            <p class="meta">배드민턴<br>
+            06:00-21:30<br>
+            누구나</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북오동배드민턴장">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북오동배드민턴장">리뷰보기</a>
+            <a class="application" href="https://www.gbcmc.or.kr/fmcs/84" target="_blank" rel="noopener" aria-label="강북오동배드민턴장">이용안내</a>
+          </article>
+          <article class="card" data-id="sports-오동근린공원테니스장-스포츠시설" data-type="sports" data-address="서울특별시 강북구 월계로 191-40" data-title="스포츠시설">
+            <h3>오동근린공원 테니스장</h3>
+            <p class="meta">테니스<br>
+            테니스 레슨 및 코트 임대 문의: 010-9976-3143<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="오동근린공원테니스장">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="오동근린공원테니스장">리뷰보기</a>
+            <a class="application" href="https://blog.naver.com/680720_4" target="_blank" rel="noopener" aria-label="오동근린공원테니스장">블로그</a>
+          </article>
+          <article class="card" data-id="sports-강북구민운동장-스포츠시설" data-type="sports" data-address="서울특별시 강북구 오현로 187-25" data-title="스포츠시설">
+            <h3>강북구민운동장</h3>
+            <p class="meta">조깅, 농구, 배드민턴<br>
+            개방시간 06:00-22:00 · 가족단위 생활체육 무료 이용<br>
+            연중무휴 단, 설 · 추석 당일 휴관<br>
+            02-987-6893</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북구민운동장">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북구민운동장">리뷰보기</a>
+            <a class="application" href="https://www.gbcmc.or.kr/fmcs/283" target="_blank" rel="noopener" aria-label="강북구민운동장">대관안내</a>
+          </article>
+          <article class="card" data-id="sports-오동골프클럽-스포츠시설" data-type="sports" data-address="서울특별시 강북구 오현로 187-25" data-title="스포츠시설">
+            <h3>오동골프클럽</h3>
+            <p class="meta">골프<br>
+            06:00~22:30<br>
+            정기회원 1개월 60분 170,000원 · 락커사용 가능<br>
+            02-944-2951</p>
+            <button class="primary" data-act="locate" type="button" aria-label="오동골프클럽">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="오동골프클럽">리뷰보기</a>
+            <a class="application" href="https://www.gbcmc.or.kr/fmcs/88" target="_blank" rel="noopener" aria-label="오동골프클럽">타석 실시간 현황</a>
+          </article>
+          <article class="card" data-id="sports-강북종합체육센터-스포츠시설" data-type="sports" data-address="서울특별시 강북구 솔샘로48길 14" data-title="스포츠시설">
+            <h3>강북종합체육센터</h3>
+            <p class="meta">수영, GX, 필라테스, 헬스<br>
+            02-6958-8101~3<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북종합체육센터">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북종합체육센터">리뷰보기</a>
+          </article>
+          <article class="card" data-id="sports-서울시립강북청소년센터-스포츠시설" data-type="sports" data-address="서울특별시 강북구 4.19로 74" data-title="스포츠시설">
+            <h3>서울시립강북청소년센터</h3>
+            <p class="meta">GX, 인라인 스케이트, 헬스, 수영, 아쿠아로빅<br>
+            02-6715-6600<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="서울시립강북청소년센터">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="서울시립강북청소년센터">리뷰보기</a>
+          </article>
+          <article class="card" data-id="sports-솔밭근린공원배드민턴장-스포츠시설" data-type="sports" data-address="서울특별시 강북구 삼양로 56" data-title="스포츠시설">
+            <h3>솔밭근린공원 배드민턴장</h3>
+            <p class="meta">배드민턴<br>
+            02-901-6953<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="솔밭근린공원배드민턴장">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="솔밭근린공원배드민턴장">리뷰보기</a>
+          </article>
+          <!--공원-->
+          <article class="card" data-id="park-수유일-공원" data-type="park" data-address="서울 강북구 수유동 605-405" data-title="공원">
+            <h3>수유일공원</h3>
+            <p class="meta">공원</p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유일공원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="수유일공원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="park-수유동553근린-공원" data-type="park" data-address="서울 강북구 수유동 553-3" data-title="공원">
+            <h3>근린공원</h3>
+            <p class="meta">공원</p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유동553근린공원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="수유동553근린공원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="park-무궁화-공원" data-type="park" data-address="서울 강북구 수유동 576-51" data-title="공원">
+            <h3>무궁화공원</h3>
+            <p class="meta">공원</p>
+            <button class="primary" data-act="locate" type="button" aria-label="무궁화공원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="무궁화공원">리뷰보기</a>
+          </article>
+          <!--요가원-->
+          <article class="card" data-id="yoga-수유프리미엄-요가원" data-type="yoga" data-address="서울 강북구 도봉로 329 동오빌딩 8층" data-title="요가원">
+            <h3>수유요가 프리미엄</h3>
+            <p class="meta">요가<br>
+            8층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유요가 프리미엄">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="수유요가 프리미엄">리뷰보기</a>
+          </article>
+          <article class="card" data-id="yoga-뮤온-요가원" data-type="yoga" data-address="서울 강북구 도봉로 325 7층" data-title="요가원">
+            <h3>뮤온 요가&필라테스</h3>
+            <p class="meta">요가<br>
+            7층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="뮤온 요가&필라테스">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="뮤온 요가&필라테스">리뷰보기</a>
+          </article>
+          <article class="card" data-id="yoga-요가타운-요가원" data-type="yoga" data-address="서울 강북구 도봉로 353 상목빌딩 5층" data-title="요가원">
+            <h3>요가타운 수유교육원</h3>
+            <p class="meta">요가<br>
+            5층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="요가타운 수유교육원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="요가타운 수유교육원">리뷰보기</a>
+          </article>
+          <!--임시<article class="card" data-id="yoga-리하트-요가원" data-type="yoga" data-address="서울 강북구 삼양로 424 정암빌딩 2층" data-title="요가원">
+            <h3>리하트요가</h3>
+            <p class="meta">요가<br>
+            2층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="리하트요가">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="리하트요가">리뷰보기</button>
+          </article>
+          <article class="card" data-id="yoga-진스-요가원" data-type="yoga" data-address="서울 강북구 삼양로93길 9" data-title="요가원">
+            <h3>진스 요가</h3>
+            <p class="meta">요가<br>
+            <br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="진스 요가">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="진스 요가">리뷰보기</button>
+          </article>-->
+          <!--골프장-->
+          <article class="card" data-id="golf-드림골프-골프장" data-type="golfclub" data-address="서울 강북구 수유동 오현로 131" data-title="골프장">
+            <h3>드림골프스토리</h3>
+            <p class="meta">스크린 골프<br>
+            매일 08:00-24:00<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="드림골프스토리">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="드림골프스토리">리뷰보기</a>
+          </article>
+          <article class="card" data-id="golf-프랜즈퀀텀수유-골프장" data-type="golfclub" data-address="서울 강북구 노해로8길 22 2층 205호" data-title="골프장">
+            <h3>프렌즈스크린 퀸텀 수유점</h3>
+            <p class="meta">스크린 골프<br>
+            공란<br>
+            2층 205호</p>
+            <button class="primary" data-act="locate" type="button" aria-label="프렌즈스크린 퀸텀 수유점">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="프렌즈스크린 퀸텀 수유점">리뷰보기</a>
+          </article>
+          <article class="card" data-id="golf-골프종수유강북구청-골프장" data-type="golfclub" data-address="서울 강북구 한천로 1045" data-title="골프장">
+            <h3>골프존파크 수유강북구청점</h3>
+            <p class="meta">스크린 골프<br>
+            매일 9:00-24:00<br>
+            지하 1층</p>
+            <button class="primary" data-act="locate" type="button" aria-label="골프존파크 수유강북구청점">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="골프존파크 수유강북구청점">리뷰보기</a>
+          </article>
+          <!--임시<article class="card" data-id="golf-강북파크골프-골프장" data-type="golf" data-address="서울 강북구 노해로 70" data-title="골프장">
+            <h3>강북파크골프스크린</h3>
+            <p class="meta">스크린 골프<br>
+            공란<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북파크골프스크린">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="강북파크골프스크린">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-골프존스크린419-골프장" data-type="golf" data-address="서울 강북구 삼양로 502 지층" data-title="골프장">
+            <h3>골프존 스크린419</h3>
+            <p class="meta">스크린 골프<br>
+            월-금 9:00-24:00, 토 8:00-24:00, 일 8:00-22:00<br>
+            지층</p>
+            <button class="primary" data-act="locate" type="button" aria-label="골프존 스크린419">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="골프존 스크린419">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-SG골프수유-골프장" data-type="golf" data-address="서울 강북구 삼양로 325" data-title="골프장">
+            <h3>SG골프 수유점</h3>
+            <p class="meta">스크린 골프<br>
+            지층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="SG골프 수유점">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="SG골프 수유점">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-한일골프스쿨-골프장" data-type="golf" data-address="서울 강북구 삼양로 438" data-title="골프장">
+            <h3>한일골프스쿨</h3>
+            <p class="meta">스크린 골프<br>
+            공란<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="한일골프스쿨">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="한일골프스쿨">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-프로피터-골프장" data-type="golf" data-address="서울 강북구 노해로 95-1 황궁빌딩 4층" data-title="골프장">
+            <h3>프로피터</h3>
+            <p class="meta">스크린 골프<br>
+            월-토 10:00-21:00<br>
+            4층</p>
+            <button class="primary" data-act="locate" type="button" aria-label="프로피터">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="프로피터">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-삼성골프클럽-골프장" data-type="golf" data-address="서울 강북구 한천로 1121 수유삼성아파트" data-title="골프장">
+            <h3>삼성골프클럽</h3>
+            <p class="meta">스크린 골프<br>
+            월-금 10:00-22:00, 토-일 10:00-21:00<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="삼성골프클럽">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="삼성골프클럽">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-GPT골프레슨-골프장" data-type="golf" data-address="서울 강북구 삼양로 498 공간라움오프스텔 B1" data-title="골프장">
+            <h3>GPT골프레슨</h3>
+            <p class="meta">스크린 골프<br>
+            지하 1층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="GPT골프레슨">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="GPT골프레슨">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-프린세스골프존-골프장" data-type="golf" data-address="서울 강북구 삼양로 441" data-title="골프장">
+            <h3>프린세스골프존</h3>
+            <p class="meta">스크린 골프<br>
+            공란<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="프린세스골프존">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="프린세스골프존">리뷰보기</button>
+          </article>
+          <article class="card" data-id="golf-다온골프-골프장" data-type="golf" data-address="서울 강북구 삼양로 497 4층" data-title="골프장">
+            <h3>다온골프&스크린</h3>
+            <p class="meta">스크린 골프<br>
+            4층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="다온골프">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="다온골프">리뷰보기</button>
+          </article>-->
+          <!--댄스스포츠학원-->
+          <article class="card" data-id="dance-김욱-댄스" data-type="dance" data-address="서울 강북구 수유동 오현로 131" data-title="댄스스포츠학원">
+            <h3>김욱댄스스포츠학원</h3>
+            <p class="meta">댄스스포츠<br>
+            김욱<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="김욱댄스스포츠학원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="김욱댄스스포츠학원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="dance-엠엘-댄스" data-type="dance" data-address="서울 강북구 노해로27길 3 3층" data-title="댄스스포츠학원">
+            <h3>엠엘댄스스포츠학원</h3>
+            <p class="meta">댄스스포츠<br>
+            3층<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="엠엘댄스스포츠학원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="엠엘댄스스포츠학원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="dance-조이-댄스" data-type="dance" data-address="서울 강북구 도봉로 377 2F" data-title="댄스스포츠학원">
+            <h3>조이댄스스포츠</h3>
+            <p class="meta">댄스스포츠<br>
+            2층<br>
+            100,000원</p>
+            <button class="primary" data-act="locate" type="button" aria-label="조이댄스스포츠">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="조이댄스스포츠">리뷰보기</a>
+          </article>
+          <!--임시 <article class="card" data-id="dance-대한덕릉로79-댄스" data-type="dance" data-address="서울 강북구 덕릉로 79" data-title="댄스스포츠학원">
+            <h3>대한댄스스포츠학원</h3>
+            <p class="meta">댄스스포츠<br>
+            공란<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="대한댄스스포츠학원">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="대한댄스스포츠학원">리뷰보기</button>
+          </article>
+          <article class="card" data-id="dance-김광수-댄스" data-type="dance" data-address="서울 강북구 도봉로 327" data-title="댄스스포츠학원">
+            <h3>김광수댄스스포츠</h3>
+            <p class="meta">댄스스포츠<br>
+            공란<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="김광수댄스스포츠">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="김광수댄스스포츠">리뷰보기</button>
+          </article>-->
+        </div>
+      </section>
+
+      <!-- 휴식시설 -->
+      <section class="panel" aria-labelledby="sect-senior-title">
+        <div class="panel-header">
+          <h2 class="panel-title" id="sect-senior-title">복지시설</h2>
+          <!--<span class="badge">복지관 · 기원 · 병원</span>-->
+        </div>
+        <div class="list" id="seniorList">
+          <!--복지관-->
+          <article class="card" data-id="welfare-시립강북노인-복지관" data-type="welfare" data-address="서울 강북구 삼양로92길 40" data-title="복지관">
+            <h3>시립강북노인종합복지관</h3>
+            <p class="meta">파워로빅, 파워요가, 건강체조, 필라테스, 탁구(중급)<br>
+            월-금 09:00-18:00 · 02-999-9179<br>
+            30,000원</p>
+            <button class="primary" data-act="locate" type="button" aria-label="시립강북노인종합복지관">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="시립강북노인종합복지관">리뷰보기</a>
+          </article>          
+          <!--병원-->
+          <article class="card" data-id="hospital-경희새록-한의원" data-type="hospital" data-address="서울 강북구 도봉로 313 3층 301호" data-title="병원">
+            <h3>경희새록한의원</h3>
+            <p class="meta">한의 치료<br>
+            월-금 09:30-20:00 · 토 9:30-15:00<br>
+            3층 301호 · 서승현</p>
+            <button class="primary" data-act="locate" type="button" aria-label="경희새록한의원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="경희새록한의원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="hospital-청풍-한의원" data-type="hospital" data-address="서울 강북구 도봉로 375 3층" data-title="병원">
+            <h3>청풍한의원</h3>
+            <p class="meta">한의 치료<br>
+            월-금 09:30-20:00, 토 9:30-15:00<br>
+            3층</p>
+            <button class="primary" data-act="locate" type="button" aria-label="청풍한의원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="청풍한의원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="hospital-소나무-한의원" data-type="hospital" data-address="서울 강북구 노해로8길 22 경남아너스빌 3층" data-title="병원">
+            <h3>소나무한의원</h3>
+            <p class="meta">한의 치료<br>
+            월-금 09:30-20:00, 토 9:30-15:00<br>
+            3층</p>
+            <button class="primary" data-act="locate" type="button" aria-label="소나무한의원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="소나무한의원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="hospital-북서울요양-병원" data-type="hospital" data-address="서울 한천로 1002 북서울요양병원" data-title="병원">
+            <h3>북서울요양병원</h3>
+            <p class="meta">병원<br>
+            0507-1363-7006<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="북서울요양병원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="북서울요양병원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="hospital-포근한-병원" data-type="hospital" data-address="서울 강북구 도봉로 266" data-title="병원">
+            <h3>포근한병원</h3>
+            <p class="meta">병원<br>
+            02-986-9988<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="포근한병원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="포근한병원">리뷰보기</a>
+          </article>
+          <!--경로당-->
+          <article class="card" data-id="elder-삼흥-경로당" data-type="elder" data-address="서울 삼양로77길 111 (수유동, 삼흥연립2단지)" data-title="경로당">
+            <h3>삼흥</h3>
+            <p class="meta">경로당<br>
+            02-945-5888<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="삼흥">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="삼흥">리뷰보기</a>
+          </article>
+          <article class="card" data-id="elder-큰무네미-경로당" data-type="elder" data-address="서울 도봉로71가길 30-9 (수유동)" data-title="경로당">
+            <h3>큰무네미</h3>
+            <p class="meta">경로당<br>
+            02-988-2122<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="큰무네미">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="큰무네미">리뷰보기</a>
+          </article>
+          <article class="card" data-id="elder-수유인수봉로20-경로당" data-type="elder" data-address="서울 인수봉로20길 32 (수유동)" data-title="경로당">
+            <h3>수유</h3>
+            <p class="meta">경로당<br>
+            02-986-2803<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="수유">리뷰보기</a>
+          </article>
+          <article class="card" data-id="elder-수유장수-경로당" data-type="elder" data-address="서울 삼양로80나길 56 (수유동)" data-title="경로당">
+            <h3>수유장수</h3>
+            <p class="meta">경로당<br>
+            02-989-5243<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유장수">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="수유장수">리뷰보기</a>
+          </article>
+          <article class="card" data-id="elder-화계-경로당" data-type="elder" data-address="서울 인수봉로38가길 28(수유동)" data-title="경로당">
+            <h3>화계</h3>
+            <p class="meta">경로당<br>
+            02-980-1811<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="화계">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="화계">리뷰보기</a>
+          </article>
+          <article class="card" data-id="elder-625참전용사-경로당" data-type="elder" data-address="서울 노해로 115 (수유동, 대한민국 재향군인회 건물 옥상)" data-title="경로당">
+            <h3>6.25참전용사</h3>
+            <p class="meta">경로당<br>
+            02-907-7947<br>
+            대한민국 재향군인회 건물 옥상</p>
+            <button class="primary" data-act="locate" type="button" aria-label="625참전용사">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="625참전용사">리뷰보기</a>
+          </article>
+          <!--<article class="card" data-id="elder-물댐길-경로당" data-type="elder" data-address="서울 한천로170가길 4 (수유동)" data-title="경로당">
+            <h3>물댐길</h3>
+            <p class="meta">경로당<br>
+            02-998-0538<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="물댐길">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="물댐길">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-벽산201아-경로당" data-type="elder" data-address="서울 삼양로 116길 20 (수유동, 수유 벽산201 아파트)" data-title="경로당">
+            <h3>벽산201(아)</h3>
+            <p class="meta">경로당<br>
+            02-995-8741<br>
+            수유 벽산 201 아파트</p>
+            <button class="primary" data-act="locate" type="button" aria-label="벽산201아">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="벽산201아">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-벽산아-경로당" data-type="elder" data-address="서울 삼각산로 143-1 (수유동, 수유벽산아파트)" data-title="경로당">
+            <h3>벽산(아)</h3>
+            <p class="meta">경로당<br>
+            02-907-3557<br>
+            수유 벽산 아파트</p>
+            <button class="primary" data-act="locate" type="button" aria-label="벽산아">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="벽산아">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-삼성장수아-경로당" data-type="elder" data-address="서울 한천로159길 8 (수유동, 수유삼성아파트)" data-title="경로당">
+            <h3>삼성장수(아)</h3>
+            <p class="meta">경로당<br>
+            02-6224-4254<br>
+            수유 삼성 아파트</p>
+            <button class="primary" data-act="locate" type="button" aria-label="삼성장수아">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="삼성장수아">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-수유2동노혜로23길-경로당" data-type="elder" data-address="서울 노해로23길 94 (수유동)" data-title="경로당">
+            <h3>수유2동</h3>
+            <p class="meta">경로당<br>
+            02-903-7167<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유2동노혜로23길">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="수유2동노혜로23길">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-수유삼성아-경로당" data-type="elder" data-address="서울 한천로159길 8 (수유동, 래미안수유아파트 106동 옆)" data-title="경로당">
+            <h3>수유삼성(아)</h3>
+            <p class="meta">경로당<br>
+            02-991-3515<br>
+            래미안수유아파트 106동 옆</p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유삼성아">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="수유삼성아">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-장미원-경로당" data-type="elder" data-address="서울 삼양로124길 29-8(수유동)" data-title="경로당">
+            <h3>장미원</h3>
+            <p class="meta">경로당<br>
+            02-998-8799<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="장미원">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="장미원">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-상산-경로당" data-type="elder" data-address="서울 노해로8길 23 (수유동)" data-title="경로당">
+            <h3>상산</h3>
+            <p class="meta">경로당<br>
+            02-904-9002<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="상산">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="상산">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-수삼-경로당" data-type="elder" data-address="서울 삼양로98길 22 (수유동)" data-title="경로당">
+            <h3>수삼</h3>
+            <p class="meta">경로당<br>
+            02-902-7853<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="수삼">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="수삼">리뷰보기</button>
+          </article>
+          <article class="card" data-id="elder-은모루-경로당" data-type="elder" data-address="서울 도봉로95길 38-1 (수유동)" data-title="경로당">
+            <h3>은모루</h3>
+            <p class="meta">경로당<br>
+            02-998-1196<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="은모루">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="은모루">리뷰보기</button>
+          </article>-->
+          <!--기원-->
+          <article class="card" data-id="goclub-서울도봉로313-기원" data-type="goclub" data-address="서울 강북구 도봉로 313 3층 303호" data-title="기원">
+            <h3>서울기원</h3>
+            <p class="meta">바둑<br>
+            연중무휴 10:00-21:00<br>
+            3층 303호 · 5,000원</p>
+            <button class="primary" data-act="locate" type="button" aria-label="서울기원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="서울기원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="goclub-샛별-기원" data-type="goclub" data-address="서울 강북구 도봉로 269" data-title="기원">
+            <h3>샛별기원</h3>
+            <p class="meta">바둑<br>
+            연중무휴 10:00-21:00<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="샛별기원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="샛별기원">리뷰보기</a>
+          </article>
+          <article class="card" data-id="goclub-광산-기원" data-type="goclub" data-address="서울 강북구 노해로 88" data-title="기원">
+            <h3>광산기원</h3>
+            <p class="meta">바둑<br>
+            연중무휴 10:00-21:00<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="광산기원">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="광산기원">리뷰보기</a>
+          </article>
+          <!--임시<article class="card" data-id="goclub-우이419로-기원" data-type="goclub" data-address="서울 강북구 4.19로 6" data-title="기원">
+            <h3>우이기원</h3>
+            <p class="meta">바둑<br>
+            연중무휴 10:00-21:00<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="우이419로기원">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="우이419로기원">리뷰보기</button>
+          </article>
+          <article class="card" data-id="goclub-우이삼양로502-기원" data-type="goclub" data-address="서울 강북구 삼양로 502" data-title="기원">
+            <h3>우이기원</h3>
+            <p class="meta">바둑<br>
+            연중무휴 10:00-21:00<br>
+            </p>
+            <button class="primary" data-act="locate" type="button" aria-label="우이삼양로502기원">위치</button>
+            <button class="review" data-act="review" type="button" aria-label="우이삼양로502기원">리뷰보기</button>
+          </article>-->
+          <!--데이케어센터-->
+          <article class="card" data-id="daycare-강북삼양로92길-데이케어" data-type="daycare" data-address="서울 강북구 도봉로 313 3층 301호" data-title="데이케어">
+            <h3>강북데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            02-992-6784</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북데이케어센터">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북데이케어센터">리뷰보기</a>
+            <a class="application" href="https://www.gswc.or.kr/bbs/board.php?bo_table=0501" target="_blank" rel="noopener" aria-label="강북데이케어센터">안내</a>
+          </article>
+          <article class="card" data-id="daycare-강북희망-데이케어" data-type="daycare" data-address="서울 강북구 삼양로 412 명성빌딩 2층" data-title="데이케어">
+            <h3>강북희망데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            2층<br>
+            02-995-6090</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북희망데이케어센터">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북희망데이케어센터">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-강북더행복-데이케어" data-type="daycare" data-address="서울 강북구 삼양로77길 51 에덴빌딩 2층" data-title="데이케어">
+            <h3>강북 THE 행복한데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            2층<br>
+            02-989-7421</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북THE행복">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북THE행복">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-강북해오름-데이케어" data-type="daycare" data-address="서울 강북구 삼양로 438 3층" data-title="데이케어">
+            <h3>강북해오름데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            3층<br>
+            02-992-0077</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북해오름">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북해오름">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-수유덕릉로46-데이케어" data-type="daycare" data-address="서울 강북구 덕릉로 46 신우빌딩 3층" data-title="데이케어">
+            <h3>수유데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            3층<br>
+            02-945-8846</p>
+            <button class="primary" data-act="locate" type="button" aria-label="수유덕릉로46">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="수유덕릉로46">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-강북광산-데이케어" data-type="daycare" data-address="서울 강북구 노해로 87 광산빌딩 5층" data-title="데이케어">
+            <h3>강북광산데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            5층<br>
+            02-991-1457</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북광산">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북광산">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-강북햇살-데이케어" data-type="daycare" data-address="서울 강북구 삼양로 438 한일빌딩 2층" data-title="데이케어">
+            <h3>강북햇살데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            2층<br>
+            0507-1301-7247</p>
+            <button class="primary" data-act="locate" type="button" aria-label="강북햇살">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="강북햇살">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-휴복지법인-데이케어" data-type="daycare" data-address="서울 강북구 4.19로13길 3 2층, 3층" data-title="데이케어">
+            <h3>휴복지법인주간보호센터</h3>
+            <p class="meta">데이케어센터<br>
+            2층, 3층<br>
+            0507-1314-9865</p>
+            <button class="primary" data-act="locate" type="button" aria-label="휴복지법인">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="휴복지법인">리뷰보기</a>
+          </article>
+          <article class="card" data-id="daycare-운가-데이케어" data-type="daycare" data-address="서울 강북구 삼양로112길 5 1층" data-title="데이케어">
+            <h3>운가데이케어센터</h3>
+            <p class="meta">데이케어센터<br>
+            1층<br>
+            02-903-1720</p>
+            <button class="primary" data-act="locate" type="button" aria-label="운가">위치</button>
+            <a class="review" data-act="review" type="button" aria-label="운가">리뷰보기</a>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- 하단 네비게이션: 각 화면 개별 HTML로 이동 -->
+  <nav class="bottom-nav" aria-label="하단 내비게이션">
+    <a href="./community.html">커뮤니티</a>
+    <a class="active" href="./main.html" aria-current="page">지도</a>
+    <a href="./dailyprograms.html">일일참여</a>
+    <a href="./mypage.html">마이페이지</a>
+  </nav>
+
+</body>
+</html>
