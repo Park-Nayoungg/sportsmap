@@ -549,3 +549,84 @@ supabase.auth.onAuthStateChange((_e, session)=>{
   afterSignIn(session);
   if (session) gotoNextIfSaved();
 });
+
+// === Font size controller (PX 고정, A-/A+ 포함) ===
+(() => {
+  if (typeof window === 'undefined') return;
+
+  const KEY = 'ui.fontPx';   // px로 저장
+  const BASE = 16;           // 기준 px
+  const MIN  = 12;
+  const MAX  = 30;
+  //const STEP = 1;
+
+  const $ = (id) => document.getElementById(id);
+
+  function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+  function pxToScale(px)   { return px / BASE; }
+
+  function apply(px, persist = false) {
+    const v = clamp((px|0) || BASE, MIN, MAX);
+    // CSS 변수로 반영
+    document.documentElement.style.setProperty('--font-scale', String(pxToScale(v)));
+    // 표시
+    const val  = $('fontVal');
+    const help = $('fontHelp');
+    if (val)  val.textContent = `${v}px`;
+    if (help) { help.hidden = false; help.textContent = `기본 대비 ${Math.round((v/BASE)*100)}%`; }
+    const range = $('fontRange');
+    if (range) range.value = String(v);
+    // 저장
+    if (persist) { try { localStorage.setItem(KEY, String(v)); } catch {} }
+  }
+
+  function init() {
+    const range = $('fontRange');
+    const minus = $('fontMinus');
+    const plus  = $('fontPlus');
+    const save  = $('fontSave');
+    const reset = $('fontReset');
+
+    // 초기 px 불러오기
+    const saved = parseInt(localStorage.getItem(KEY), 10);
+    const start = Number.isFinite(saved) ? clamp(saved, MIN, MAX) : BASE;
+
+    // range 기본값 보정
+    if (range) {
+      if (!range.min)  range.min  = String(MIN);
+      if (!range.max)  range.max  = String(MAX);
+      if (!range.step) range.step = String(STEP);
+      range.value = String(start);
+      range.addEventListener('input', () => {
+        const px = parseInt(range.value, 10) || BASE;
+        apply(px, false); // 미리보기
+      });
+    }
+
+    // 버튼: A- / A+
+    minus?.addEventListener('click', () => {
+      const cur = parseInt(($('fontRange')?.value ?? start), 10) || start;
+      apply(cur - STEP, false);
+    });
+    plus?.addEventListener('click', () => {
+      const cur = parseInt(($('fontRange')?.value ?? start), 10) || start;
+      apply(cur + STEP, false);
+    });
+
+    // 저장 / 리셋
+    save?.addEventListener('click',  () => {
+      const cur = parseInt(($('fontRange')?.value ?? start), 10) || start;
+      apply(cur, true);
+    });
+    reset?.addEventListener('click', () => apply(BASE, true));
+
+    // 최초 적용
+    apply(start, false);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();

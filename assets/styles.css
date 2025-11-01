@@ -109,6 +109,7 @@ header,
    Bottom nav
 ========================= */
 .bottom-nav{
+  max-width: 400px;
   position:fixed;left:0;right:0;bottom:0;height:var(--nav-h);
   display:grid;grid-template-columns:repeat(4,1fr);
   background:#fff;border-top:1px solid var(--border);z-index:100;padding-bottom:env(safe-area-inset-bottom);
@@ -391,3 +392,6 @@ border-top:7px solid #111;  transition:transform .15s ease;
 .btn-add{position:relative;text-decoration:none}
 .btn-add:link,.btn-add:visited{text-decoration:none}
 .btn-add::before{content:"+";display:inline-block;margin-right:6px;font-weight:700;line-height:1}
+
+
+
