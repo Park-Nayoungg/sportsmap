@@ -18,7 +18,7 @@
         return;
       }
       // key가 유효하면 main.html로 이동. 기존 쿼리스트링 그대로 유지
-      var target = 'main.html' + (location.search || '');
+      var target = 'assets/main.html' + (location.search || '');
       // 루프 방지: 이미 main.html이면 이동하지 않음
       if (!/\/?main\.html$/i.test(location.pathname)) {
         location.replace(target);
