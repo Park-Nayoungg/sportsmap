@@ -16,7 +16,7 @@ button, input, select, textarea {
   --nav-h:64px; --font-scale:1;
 }
 *{box-sizing:border-box}
-html{transition:font-size .12s ease-out}
+html{transition:font-size .12s ease-out;-webkit-text-size-adjust: 100%;}
 body{margin:0;background:#fff;color:#111;font-size:1rem}
 .body-no-scroll{overflow:hidden}
 #fontRange{touch-action:none}
