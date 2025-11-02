@@ -176,7 +176,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     range.addEventListener('touchend',  end, {passive:true});
     range.addEventListener('mouseup',   end, {passive:true});
     range.addEventListener('change',    end, {passive:true});
-
+    range.addEventListener('pointercancel', end, {passive:true});
+    range.addEventListener('touchcancel',   end, {passive:true});
+    
     btnSave?.addEventListener('click', () => alert('글자 크기를 저장했습니다.'));
     btnReset?.addEventListener('click', () => { range.value = String(DEFAULT_PT); end(); });
 

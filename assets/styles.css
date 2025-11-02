@@ -19,7 +19,7 @@ button, input, select, textarea {
 html{transition:font-size .12s ease-out;-webkit-text-size-adjust: 100%;}
 body{margin:0;background:#fff;color:#111;font-size:1rem}
 .body-no-scroll{overflow:hidden}
-#fontRange{touch-action:none}
+
 
 /* =========================
    Header / App header / Site header
@@ -449,15 +449,23 @@ border-top:7px solid #111;  transition:transform .15s ease;
 .search .search-btn,
 .searchbar .search-btn,
 .searchbar .btn,
-.search .btn {
-  flex: 0 0 auto;              /* 커지지 않음 */
-  white-space: nowrap;
-  max-width: 40%;              /* 텍스트 길어도 한계 설정 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: clamp(6px, 1.2vh, 10px) clamp(8px, 2vw, 12px);
-}
+.search .btn {flex: 0 0 auto;white-space: nowrap;max-width: 40%;overflow: hidden;text-overflow: ellipsis;padding: clamp(6px, 1.2vh, 10px) clamp(8px, 2vw, 12px);}
 
 /* 헤더 안 배치 시 여유 공간 분배 */
 .app-header .app-title { flex: 0 0 auto; min-width: 0; }
 .app-header .home { flex: 0 0 auto; }
+
+
+/* [폰트 설정 카드] range가 항상 보이고 드래그 가능하도록 */
+#fontRange{
+  width:100%; min-width:0; flex:1 1 auto;
+  touch-action:manipulation;            /* 터치 제스처만 허용 */
+}
+/* 라벨이 트랙을 덮어 이벤트를 가로채지 않도록 */
+label[for="fontRange"]{ display:block; margin:4px 0; pointer-events:none; }
+
+/* 카드가 자식 overflow로 트랙/버튼을 자르지 않도록 */
+.panel .list .card{ overflow:visible; }
+
+/* 버튼은 고정폭, 입력창만 가변폭 → 필터/버튼이 항상 보임 */
+#fontMinus,#fontPlus,#fontSave,#fontReset{ flex:0 0 auto; white-space:nowrap; }
