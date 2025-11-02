@@ -1,6 +1,6 @@
 
 :root{--primary:#0b72ff;--border:#e5e7eb;--muted:#6b7280;--media-max-h: clamp(200px, 45vh, 520px); }
-
+html, body { overflow-x: hidden; }
 *{box-sizing:border-box}
 body{margin:0;color:#111;background:#fff}
 /*피드*/
@@ -92,16 +92,6 @@ font-size:13px; cursor:pointer;}
 .cmt-modal__form textarea{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px;min-height:48px;resize:vertical}
 
 /* 하단 네비게이션(4개 탭) */
-.bottom-nav{
-  position:fixed;left:0;right:0;bottom:0;height:64px;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  background:#fff;border-top:1px solid var(--border);z-index:100;
-  padding-bottom:env(safe-area-inset-bottom)
-}
-.bottom-nav a{display:flex;align-items:center;justify-content:center;gap:4px;
-  text-decoration:none;color:#374151;font-size:12px}
-.bottom-nav a.active{color:var(--primary);font-weight:700}
-.spacer{height:calc(64px + env(safe-area-inset-bottom))}
 
 /*검색*/
 header .search{ position:relative; }
@@ -129,7 +119,6 @@ body{ font-size: calc(16px * var(--font-scale)); }
 .badge{ font-size: calc(11px * var(--font-scale)); }
 .btn, .chip{ font-size: calc(12px * var(--font-scale)); }
 .panel-title{ font-size: calc(18px * var(--font-scale)); }
-.bottom-nav a, .bottom-nav button{ font-size: calc(12px * var(--font-scale)); }
 
 .composer-form select{ border:1px solid var(--border); border-radius:8px; padding:8px; }
 
@@ -240,7 +229,6 @@ padding-right:10px;}
 }
 html, body{ font-size: var(--fs-md) !important; line-height: 1.5; }
 .panel-title{ font-size: var(--fs-lg) !important; }
-.bottom-nav a, .bottom-nav button{ font-size: var(--fs-xxs) !important; }
 .chip{ font-size: var(--fs-xs) !important; }
 .btn, .btn-write-white{ font-size: var(--fs-sm) !important; }
 .badge{ font-size: var(--fs-xxs) !important; }
@@ -252,7 +240,6 @@ html, body{ font-size: var(--fs-md) !important; line-height: 1.5; }
 .post .slider .nav{ font-size: var(--fs-sm) !important; }
 .lb-btn{ font-size: var(--fs-md) !important; }
 .more-menu .mm-item{ font-size: var(--fs-sm) !important; }
-header .search input[type="search"]{ font-size: var(--fs-sm) !important; }
 /*font-size-end*/
 
 

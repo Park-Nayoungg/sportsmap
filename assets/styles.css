@@ -3,7 +3,7 @@
 @font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap;}
 @font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}
-
+html, body { overflow-x: hidden; }
 html, body,
 button, input, select, textarea {
   font-family:'Pretendard', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif !important;
@@ -27,12 +27,14 @@ body{margin:0;background:#fff;color:#111;font-size:1rem}
 header,
 .site-header,
 .app-header{
-  display:flex;gap:2px;align-items:center;justify-content:space-between;
+  display:flex;gap:2px;align-items:center;justify-content:space-between;flex-wrap: nowrap;
   padding:0px 10px;border-bottom:1px solid var(--border);background:#fff;
   position:sticky;top:0;z-index:10;
 }
+.app-header .app-title {flex: 0 0 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+max-width: clamp(80px, 18vw, 180px);}
 .app-header{height:52px;padding:0 10px;gap:3px}
-.app-title{margin:0;font-size:calc(18px * var(--font-scale));font-weight:700;line-height:1}
+.app-title{margin:0;font-size:18px;font-weight:700;line-height:1}
 .app-actions{display:flex;align-items:center;gap:8px}
 .logo{font-weight:700;font-size:calc(18px * var(--font-scale))}
 .actions{display:flex;gap:8px;align-items:center}
@@ -46,7 +48,8 @@ header,
 /* 홈 버튼 */
 .home-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:0;background:transparent;cursor:pointer;line-height:0}
 .home-btn:focus{outline:2px solid #2563eb;outline-offset:2px}
-
+.app-header .home {flex: 0 0 auto;display: inline-flex;align-items: center;justify-content: center;width: 36px; height: 36px;}
+.app-header .home svg {width: 24px;height: 24px;}
 /* =========================
    Search bars (공통 + 앱/사이트)
 ========================= */
@@ -54,12 +57,14 @@ header,
 .searchbar,
 .app-header .search,
 .app-header .searchbar{
-  position:relative;display:flex;align-items:center;gap:0;flex:1;max-width:720px;
+  position:relative;display:flex;align-items:center;gap:0;flex: 1 1 auto;min-width: 0;max-width:720px;
 }
-.search input,
-.searchbar input[type="search"],
-.app-header input[type="search"]{
-  flex:1 1 auto;width:auto;height:40px;padding:10px 56px 10px 12px;border:1px solid #ccc;border-radius:8px;background:#fff;font-size:calc(14px * var(--font-scale));
+.app-header .searchbar input[type="search"] {flex: 1 1 auto;min-width: 0;}
+.app-header .searchbar .search-btn,
+.app-header .searchbar .btn {flex: 0 0 auto;white-space: nowrap;}
+
+.search input, .searchbar input[type="search"], .app-header input[type="search"]{
+  flex:1 1 auto;width:auto;height:40px;padding:10px 56px 10px 12px;border:1px solid #ccc;border-radius:8px;background:#fff;font-size:16px;
   transition:border-color .15s ease,box-shadow .15s ease;
 }
 .app-header input[type="search"]{height:36px;padding:8px 40px 8px 12px}
@@ -87,7 +92,8 @@ header,
 .searchbar .search-btn:focus{outline:2px solid #2563eb;outline-offset:2px}
 
 /* 필터 버튼 */
-#fFilter.btn{min-width:63px;height:36px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:8px;background:#f9fafb;color:#111;cursor:pointer;font-size:calc(12px * var(--font-scale));margin:0 3px;}
+#btnFilter.btn{min-width:72px;height:36px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:8px;background:#f9fafb;color:#111;cursor:pointer;font-size:16px;margin:0 3px;}
+#fFilter.btn{min-width:63px;height:36px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:8px;background:#f9fafb;color:#111;cursor:pointer;font-size:16px;margin:0 3px;}
 #fFilter.btn:focus-visible{box-shadow:0 0 0 3px rgba(11,114,255,.15);outline:0}
 #fFilter[aria-expanded="true"]{background:#eef2ff;border-color:#c7d2fe}
 .actions #btnFilter.btn{height:36px;align-items: center;padding:0 12px;}
@@ -109,18 +115,41 @@ header,
    Bottom nav
 ========================= */
 .bottom-nav{
-  max-width: 400px;
-  position:fixed;left:0;right:0;bottom:0;height:var(--nav-h);
-  display:grid;grid-template-columns:repeat(4,1fr);
-  background:#fff;border-top:1px solid var(--border);z-index:100;padding-bottom:env(safe-area-inset-bottom);
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: var(--nav-h);
+  display: flex;                 /* grid → flex */
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: border-box;
+  overflow: hidden;              /* 내부 콘텐츠가 밖으로 밀리지 않도록 */
 }
-.bottom-nav a,.bottom-nav button{
-  font-size:calc(12px * var(--font-scale));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  color:#374151;text-decoration:none;background:transparent;border:0;cursor:pointer;outline:0;
+.bottom-nav a,
+.bottom-nav button{
+  flex: 1 1 0;                   /* 4등분 배치 */
+  min-width: 0;                  /* 줄어들기 허용(핵심) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  color: #374151;
+  font-size: 16px;
+  white-space: nowrap;           /* 한 줄 표시 */
+  overflow: hidden;              /* 넘치면 잘라내기 */
+  text-overflow: ellipsis;       /* … 처리 */
 }
+.bottom-nav .icon{ width: 33px; height: 22px; border-radius: 50%; border: 1px solid #e5e7eb; }
+.bottom-nav .active{ color:#0b72ff; font-weight:700; }
 .bottom-nav a:focus-visible,.bottom-nav button:focus-visible{box-shadow:0 0 0 3px rgba(11,114,255,.25) inset;border-radius:10px}
-.bottom-nav .icon{width:33px;height:22px;border-radius:50%;border:1px solid #e5e7eb}
-.bottom-nav .active{color:#0b72ff;font-weight:700}
 
 /* =========================
    Dialog
@@ -394,4 +423,41 @@ border-top:7px solid #111;  transition:transform .15s ease;
 .btn-add::before{content:"+";display:inline-block;margin-right:6px;font-weight:700;line-height:1}
 
 
+/*추가*/
+.search, .searchbar, .app-header .search, .app-header .searchbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;                 /* 뷰포트보다 커지지 않음 */
+  max-width: min(100%, 720px); /* 기존 720px 상한 유지, 모바일에선 100% */
+  min-width: 0;                /* 내부 수축 허용 */
+  box-sizing: border-box;
+  overflow: hidden;            /* 내부 넘침 차단 */
+}
 
+/* 입력창: 유일하게 늘어남. 글자 확대 시에도 수축 허용 */
+.search input[type="search"],
+.searchbar input[type="search"]{
+  flex: 1 1 0;
+  min-width: 0;                /* 핵심: 수축 허용 */
+  width: auto;
+  box-sizing: border-box;
+}
+
+/* 버튼: 고정 폭. 줄바꿈 금지 */
+.search .search-btn,
+.searchbar .search-btn,
+.searchbar .btn,
+.search .btn {
+  flex: 0 0 auto;              /* 커지지 않음 */
+  white-space: nowrap;
+  max-width: 40%;              /* 텍스트 길어도 한계 설정 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: clamp(6px, 1.2vh, 10px) clamp(8px, 2vw, 12px);
+}
+
+/* 헤더 안 배치 시 여유 공간 분배 */
+.app-header .app-title { flex: 0 0 auto; min-width: 0; }
+.app-header .home { flex: 0 0 auto; }
